@@ -1,0 +1,32 @@
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+checkAdminStatus function.
+compares a cl_guid with all cl_guids from the AdminList
+If Player is on the List, he will automatically receive an admin level
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global checkAdminStatus=function(admin_id)
+{
+	foreach( keyVar and valVar in AdminList)
+	{
+		if(valVar["cl_guid"]==PlayerList[admin_id]["cl_guid"]){
+			PlayerList[admin_id]["admin_level"]=valVar["admin_level"];
+		}
+	}	
+};
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+compareName function.
+compares a name with all names from the BanList.
+if name is equal, we return 1 and can kick the player
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global compareName=function(name)
+{
+	foreach( keyVar and valVar in BanList)
+	{
+		if(name==valVar){
+			return 1;
+		}
+	}	
+	return 0;
+};
+

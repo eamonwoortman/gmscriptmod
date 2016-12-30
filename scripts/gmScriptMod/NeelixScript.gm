@@ -1,0 +1,378 @@
+include("Neelix_utils.gm");
+include("Neelix_tables.gm");
+include("Neelix_client_cmds.gm");
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+global used vars for passwords etc.
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global friendpw="FRIENDPASS"; 	//admin level 1
+global clanpw="CLANPASS"; 		//admin level 2
+global leaderpw="LEADERPASS"; 	//admin level 3
+global adminpw="ADMINPASS"; 		//admin level 4
+
+global kickReason="";
+global showHelp="true";
+global MAX_PLAYERS=20;
+global clan_name="Team Neelix";
+global clan_slogan="Neelix!";
+global clan_site="www.GamingGoNe.nET";
+global login_command="gmsm";
+global first_blood=0;
+
+global level = table( time, lastAdv, advInterval = 30, AdvCount = 0, advMaxMessages = 10 );
+
+global AdvMsgs = table( "Play Fair! But Play Dirty!", "GameMonkeySkriptMod Beta Testing" ,"Try /helpme", "GamingGoNe.nET", "Hits from the GoNe!", "OMG, they killed Dutchmeat!", "www.gaminggone.net", "Drink milk!", "Dont try this at home!", "^3U^2I^3U^2I^3U^2I", "/banana" );
+
+global KILLINGSPREE = 3;
+global MULTIKILL = 5;
+global ULTRAKILL = 10;
+global UNSTOPABLE = 15;
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+GAME_CLIENT_COMMAND
+Never ever delete this function
+All functions in upper case are functions, which are called by the plugin code.
+remove this function and your server will not start
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global GAME_CLIENT_COMMAND= function(int_value, string_value, concat_value)
+{
+	return clientCommand(int_value,string_value,concat_value);
+};
+global loadSession = function (clientNum){
+		
+		Cvar = "clientSession"+clientNum;
+		
+		clientSess = getStringCvar(Cvar);	
+	
+		guid = GetValueForKey(clientSess, "cl_guid");
+
+		//someone has disconnected, and another person has taken his slot
+		if (!guid || guid != PlayerList[clientNum]["cl_guid"]){
+			echo ("DEBUG SESSION -"+clientNum+"- No clientSession has been found, or the guid is does not match, deleting session");
+
+			//get rid of the sessionvar
+			setCvar(Cvar, ""); //blank out the session cvar
+			return;
+		}
+	
+		//getvalueforkey returns a string! so becareful with int-based variables
+		adminlvl = atoi(GetValueForKey(clientSess, "admin"));
+
+		ignored = atoi(GetValueForKey(clientSess, "ignored"));
+		
+		PlayerList[clientNum]["ignored"] = ignored;
+		PlayerList[clientNum]["admin_level"]= adminlvl;
+};
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+GAME_CLIENT_CONNECT
+Never ever delete this function
+All functions in upper case are functions, which are called by code.
+remove this function and your server will not start
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global GAME_CLIENT_CONNECT = function(clientNum, firstTime)
+{
+	UserInfoString = "";
+	playerName = "";
+
+	//get the userinfo string from the engine
+	UserInfoString = GetUserInfo(clientNum);
+
+	//now get the name of the player
+	//playerName = GetValueForKey(UserInfoString,"name");
+	PlayerList[clientNum]["name"] = GetValueForKey(UserInfoString,"name");
+	PlayerList[clientNum]["ip"] = GetValueForKey(UserInfoString,"ip");
+	PlayerList[clientNum]["cl_guid"] = GetValueForKey(UserInfoString,"cl_guid");
+	PlayerList[clientNum]["password"] = GetValueForKey(UserInfoString,"g_password");
+	
+
+	//Use the Password, to join a certain channel
+
+	PlayerList[clientNum]["chan"] = GetValueForKey(UserInfoString,"password");
+	if(PlayerList[clientNum]["chan"]!=""){
+		cp(clientNum,"You have joined Channel: "+PlayerList[clientNum]["chan"]);
+		cpm(clientNum,"You have joined Channel: "+PlayerList[clientNum]["chan"]);
+
+		for(i=0;i<MAX_PLAYERS;i=i+1){
+			if(PlayerList[i]["chan"]==PlayerList[clientNum]["chan"])
+			{
+				cp(i,PlayerList[clientNum]["name"]+" ^5has joined Channel: "+PlayerList[clientNum]["chan"]);
+				cpm(i,PlayerList[clientNum]["name"]+" ^5has joined Channel: "+PlayerList[clientNum]["chan"]);
+			}
+		}
+	}
+
+	//Kai
+	if(compareName(PlayerList[clientNum]["name"])==1){
+                set("clientkick "+clientNum+ " 0");
+                return;
+    }
+
+	loadSession (clientNum);
+
+		//if the session has recognised the player as an admin, then we don't need to do the checkadminstatus anymore.
+	if (!PlayerList[clientNum]["admin_level"]){
+		checkAdminStatus(clientNum);
+	}
+
+
+
+};
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+GAME_CONSOLE_COMMAND
+Never ever delete this function
+All functions in upper case are functions, which are called by code.
+remove this function and your server will not start
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global GAME_CONSOLE_COMMAND = function(command, concat_value)
+{
+	if (command == "cp"){
+		//syntax: cp(CLIENT,TXT);
+		//if CLIENT==-1, than send it to all
+		cp(-1, concat_value);
+		return 1;
+	}
+
+	if (command == "cpm"){
+		//syntax: cpm(CLIENT,TXT);
+		//if CLIENT==-1, than send it to all
+		cpm(-1, concat_value);
+		return 1;
+	}
+
+	if (command == "cprint"){
+		//syntax: cprint(CLIENT,TXT);
+		//if CLIENT==-1, than send it to all
+		cprint(-1, concat_value);
+		return 1;
+	}
+
+	if (command == "playsound"){
+		playsound(-1, concat_value);
+		return 1;
+	}
+
+	if (command == "addbots"){
+		number = 0;
+		bot_skill = 0; //lowest skill
+		MAX_BOTS = 8;
+		number = atoi(concat_value);
+
+		if (number < 1 || number > MAX_BOTS){
+			echo("Incorrect value, try: 'addbots 5' for example");
+			return 1;
+		}
+
+		setCvar("bot_enable","1");
+
+		for (i = 0; i < number; i = i + 1){
+	
+/*
+SPAWNBOT [/param [value]] [/param [value]] ...
+
+  where [/param [value]] may consist of:
+
+  /name [name]
+  /skill [0-4]
+  /team [AXIS/ALLIES]
+  /class [SOLDIER/MEDIC/LIEUTENANT/ENGINEER/COVERTOPS/FIELDOPS]
+  /weapon [weaponValue]
+  /spawnpoint [targetname]
+  /respawn [ON/OFF]
+  /scriptName [scriptName]
+  /character [character]
+  /rank [rank]
+  /skills [botskills]
+  /pow [yes/no]
+*/
+
+			set("spawnbot /name TeamNeelix"+i+" /skill "+bot_skill);
+
+		}
+		
+
+		return 1;
+	}
+
+
+};
+
+
+global GMSM_KILL_EVENT = function(attacker,target,mod,attackersHealth){
+
+
+	//we don't count teamswitch "kills"
+	if (WeaponList[mod]["mod"] == "MOD_SWITCHTEAM"){
+		return;
+	}
+
+	//self kill
+	if (attacker == target){
+		PlayerList[attacker]["selfkills"] = PlayerList[attacker]["selfkills"] + 1;
+		return;
+	}
+       
+	//TeamKill
+	if(PlayerList[attacker]["team"]==PlayerList[target]["team"]){
+
+		PlayerList[attacker]["teamkills"]=PlayerList[attacker]["teamkills"]+1;	
+	
+		if(PlayerList[attacker]["teamkills"] > 1){
+			say("STOP TeamKilling "+PlayerList[attacker]["name"]);	
+		}
+		if(PlayerList[attacker]["teamkills"]>3){
+			set("clientkick "+attacker+ " 0");
+		}
+       
+	}else{
+
+		if(first_blood==0){
+			say(PlayerList[attacker]["name"] + " ^3drew first ^1Blood^3!");
+
+			playsound(-1,"firstblood.wav");	
+
+			global first_blood=1;
+
+		}
+
+		if (WeaponList[mod]["mod"] == "MOD_GRENADE" || mod == "MOD_GRENADE_LAUNCHER"){
+			PlayerList[attacker]["nadekills"]=PlayerList[attacker]["nadekills"]+1;
+		}
+
+		if (WeaponList[mod]["mod"] == "MOD_KNIFE"){
+			PlayerList[attacker]["knifekills"]=PlayerList[attacker]["knifekills"]+1;
+			playsound(-1, "sound\\GoNe\\sheep.wav");
+			say(PlayerList[target]["name"]+"^7 got killed with a knife by "+PlayerList[attacker]["name"]+"^7!");	
+		}
+
+		cprint(target, "^7Last Life: ^3Kills: ^7"+PlayerList[target]["kills"]+", ^3Deaths: ^7"+PlayerList[target]["deaths"]+", ^3Killer Health: ^7"+attackersHealth);
+		cp(target, "^7Last Life: ^3Kills: ^7"+PlayerList[target]["kills"]+", ^3Deaths: ^7"+PlayerList[target]["deaths"]+", ^3Killer Health: ^7"+attackersHealth);
+
+
+		PlayerList[attacker]["kills"]=PlayerList[attacker]["kills"]+1;
+		PlayerList[target]["deaths"]=PlayerList[target]["deaths"]+1;
+
+		if (PlayerList[attacker]["kills"] == KILLINGSPREE){
+			playsound(-1,"killingspree.wav");
+			say (PlayerList[attacker]["name"]+"^3 Is on a KillingSpree!");
+		}
+
+		if (PlayerList[attacker]["kills"] == MULTIKILL){
+			playsound(-1,"multikill.wav");
+			say ("^3A Multi Kill has been made by ^7!"+PlayerList[attacker]["name"]);
+		}
+	}
+
+};
+
+//the extraVar is only used when the EV_OBITUARY event is called.
+//all other variables are set -1 as default, and are overwritten IF used in that event.
+global GMSM_GAME_EVENTS = function (event,otherEntityNum, otherEntityNum2, eventParm, extraVar){
+
+	if (event == EV_OBITUARY){
+		GMSM_KILL_EVENT(otherEntityNum2,otherEntityNum,eventParm,extraVar);
+	}
+	
+	//you can get more events by simply debugging the event number like this: 
+	//echo ("EVENT CALLED: '"+event+"'");
+
+};
+
+
+global GAME_CLIENT_USERINFO_CHANGED = function(clientNum){
+	UserInfoString = "";
+
+	//get the userinfo string from the engine
+	UserInfoString = GetUserInfo(clientNum);
+
+	//now get the info of the player
+	PlayerList[clientNum]["name"] = GetValueForKey(UserInfoString,"name");
+	PlayerList[clientNum]["password"] = GetValueForKey(UserInfoString,"g_password");
+	PlayerList[clientNum]["team"] = GetValueForKey(getConfigString(clientNum),"t");
+
+	if(compareName(PlayerList[clientNum]["name"])==1){
+                set("clientkick "+clientNum+ " 0");
+       }
+
+	checkAdminStatus(clientNum);
+};
+
+//called on end of map/level or server quitting, before actual exit. 
+global GAME_SHUTDOWN = function(restart){
+	echo("[GMSM] GAME_SHUTDOWN function called");
+
+
+	setCvar("serverSession","\\AdvCount\\"+level.AdvCount);
+	
+	//go to each client who's connected(has a name), and put their variables in a cvar	
+	foreach(keys and values in PlayerList){
+		
+		//always check if the player has a name, otherwise do nothing
+		if (strlen(values["name"])){
+		
+			cnum = keys;
+			session = "clientSession"+values["id"];
+
+			setCvar(session, "\\admin\\"+values["admin_level"]+"\\ignored\\"+values["ignored"]+"\\name\\"+values["name"]+"\\cl_guid\\"+values["cl_guid"]);
+			//setCvar(session, "\\admin\\"+values["admin_level"]+"\\ignored\\"+values["ignored"]+"\\name\\"+values["name"]+"\\cl_guid\\"+values["cl_guid"]+"\\kills\\"+values["kills"]+"\\selfkills\\"+values["selfkills"]+"\\deaths\\"+values["deaths"]+"\\nadekills\\"+values["nadekills"]+"\\teamkills\\"+values["teamkills"]+"\\knifekills\\"+values["knifekills"]);
+		}
+	}
+	
+};
+
+//called on game load/startup. 
+global GAME_INIT = function(levelTime, randomSeed, restart){
+	echo("[GMSM] GAME_INIT function called");
+
+	registerCvar("serverSession","0"); //register the serverSession cvar to make sure it gets the latest, this is because it needs it the first time the server runs
+
+	//get the last AdvCount var
+	AdvCount = getStringCvar("serverSession");
+	value = GetValueForKey(AdvCount, "AdvCount");
+	level.AdvCount = atoi(value);
+
+};
+
+// called when a client's connection is established, map loaded, and ready to start playing (i.e. supply user inputs). 
+global GAME_CLIENT_BEGIN = function(clientNum){
+	GAME_CLIENT_USERINFO_CHANGED(clientNum);
+};
+
+
+global GAME_CLIENT_THINK = function(clientNum){ //the GMSM runs this function every frame, for clientbound timers in example
+};
+
+global GAME_CLIENT_DISCONNECT = function(clientNum){ //clientdisconnect, clear out the playerList table for example
+};
+
+global GAME_RUN_FRAME = function(levelTime){ //handle general timers, for maybe advertising purposes
+	level.time = levelTime;
+
+	//dutchmeat, an advertising system
+	if (level.time >= (level.lastAdv + level.advInterval*1000)){ //1000(frames) is almost 1 second
+		level.lastAdv = level.time;
+
+		if (level.AdvCount == level.advMaxMessages){
+			level.AdvCount = 0;
+		}
+		
+		if (!AdvMsgs[level.AdvCount]){ //in case the advmsgs table is shorter than advMaxMessages
+			level.AdvCount = 0;
+		}
+
+		say ("[GMSM] -"+AdvMsgs[level.AdvCount]+"-");
+		level.AdvCount = level.AdvCount + 1;
+	}
+	//dutchmeat, end of advertising system
+};
+
+global GET_CLIENT_VELOCITY_Z_IMPACT=function(clientNum){
+		return 0;
+};
+
+
+//for more information about the global GAME_ functions, here's a website about how the Q3 engine works,
+//http://icculus.org/~phaethon/q3mc/outline1.html

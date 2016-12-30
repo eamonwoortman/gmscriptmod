@@ -1,0 +1,159 @@
+global GM_NULL=0;
+global GM_INT=1;            //%d
+global GM_FLOAT=2;        //%f
+global GM_STRING=3;        //%s
+global GM_ELSE=4;
+
+global VOICECHATSALLOWED = 2;
+include("Neelix_sounds.gm");
+include("Neelix_login.gm");
+include("Neelix_client_slash_commands.gm");
+include("Neelix_client_say_commands.gm");
+include("Neelix_help.gm");
+
+
+
+global clientCommand = function(int_value,string_value,concat_value){
+
+	//Call Neelix_login.gm login functions
+
+	/*////////////////////////////////////////////////////////////////
+	//Login Commands
+	//Eamon, login function using cvars
+	//do a connected check later on
+	*/////////////////////////////////////////////////////////////////
+	if (string_value == "login")
+	{
+		PlayerLogin(int_value,concat_value);
+		return 1;
+	}
+	//Logout from Admin Status
+	if(string_value=="logout"){ 
+
+		if (!PlayerList[int_value]["admin_level"]){
+			return 1;
+		}
+
+		PlayerList[int_value]["admin_level"]=0; 
+		cprint(int_value, "You are now logged out"); 
+		say("admin "+PlayerList[int_value]["name"]+"^7 has logged out!");
+		return 1; 
+	}
+
+	/*////////////////////////////////////////////////////////////////
+	//Login Commands
+	//Kai, Login function, using .gm vars and own defined login_command
+	//do a connected check later on
+	*/////////////////////////////////////////////////////////////////
+	if (string_value==login_command){
+		return gmSMLogin(int_value,concat_value);
+	}
+	//End of Neelix_login.gm login functions
+
+	//weaponstats bug fix
+	if (string_value == "weaponstats"){ 
+   		if (getStringCvar("gamestate") == 0){  //is playing
+     			set("forceteam "+int_value+" s"); 
+      			say ("player '"+PlayerList[int_value]["name"]+"^7' is forced to spectator for using weaponstats (command) during the match"); 
+   		} 
+	}
+	//make sure that teamswitching is registered
+	if(string_value == "team"){
+		GAME_CLIENT_USERINFO_CHANGED(int_value);
+	}
+
+	if (string_value == "say" && PlayerList[int_value]["ignored"]){
+		cp(int_value, "^3You are ignored, and can't talk!");
+		cprint(int_value, "^3You are ignored, and can't talk!");
+		return 1;
+	}
+
+	//highly experimental function, funny though
+	if (string_value == "matrix" && PlayerList[int_value]["admin_level"] == 4){
+		setCvar("timescale", "0.6");
+		return 1;
+	}
+	if (string_value == "unmatrix" && PlayerList[int_value]["admin_level"] == 4){
+		setCvar("timescale", "1");
+		return 1;
+	}
+	/*////////////////////////////////////////////////////////////////
+	//New Command List Check.
+	//Inspired by merlin1991
+	*/////////////////////////////////////////////////////////////////
+	if(search(string_value,CommandList[PlayerList[int_value]["admin_level"]]["commands"])){
+
+
+		// "/" or "\" commands
+		if(string_value == "ignore"){		return sl_func_ignore ( int_value , concat_value ); }
+		if(string_value == "unignore"){ 	return sl_func_unignore ( int_value , concat_value ); }
+		if(string_value == "asay"){		return sl_func_admin_say ( int_value , concat_value );}
+		if(string_value == "ignored"){	return sl_func_ignored ( int_value );}
+		if(string_value == "admincheck"){	return sl_func_admincheck ( int_value );}
+		if(string_value == "chatto"){		return sl_func_chatto (int_value,concat_value);}
+		if(string_value == "chat"){		return sl_func_chat (int_value,concat_value);}
+		if(string_value == "re"){		return sl_func_re (int_value, concat_value);}
+		if(string_value == "chan"){		return sl_func_chan (int_value, concat_value);}
+		if(string_value == "channels"){	return sl_func_channels ( int_value);}
+		if(string_value == "chanlist"){	return sl_func_chanlist ( int_value);}
+
+		if(string_value == "whois"){		return sl_func_whois(int_value);}
+		if(string_value == "whoisadmin"){	return sl_func_whoisadmin(int_value);}
+
+		if (string_value == "ban"){ 	return	sl_func_ban(concat_value);}
+		if (string_value == "reason"){ 	return	sl_func_reason(int_value,concat_value);}
+		if (string_value == "tmpban"){ 	return	sl_func_tmpban(concat_value);}
+		if (string_value == "kick"){ 	return	sl_func_kick(concat_value);}
+		if (string_value == "drop"){ 	return	sl_func_drop(concat_value);}
+		
+		if (string_value == "noob"){ 	return	sl_func_noob(int_value,concat_value);}
+	
+		if (string_value == "beer"){ 	return	sl_func_beer(int_value);}
+		if (string_value == "sex"){ 	return	sl_func_sex(int_value);}
+		if (string_value == "banana"){ 	return	sl_func_banana(int_value);}
+		if (string_value == "music2"){ 	return	sl_func_music(int_value);}
+		
+		if (string_value == "flash"){	return	sl_func_flash(int_value,concat_value);}
+		
+		if (string_value == "spec"){ 	return	sl_func_spec(int_value,concat_value);}
+		if (string_value == "resetmatch"){ 	return	sl_func_resetmatch(int_value);}
+		if (string_value == "swapteams"){ 	return	sl_func_swapteams(int_value);}
+		if (string_value == "hsay"){ 	return	sl_func_hsay(concat_value);}
+		if (string_value == "csay"){ 	return	sl_func_csay(concat_value);}
+		if (string_value == "map"){ 	return	sl_func_map(concat_value);}
+		if (string_value == "jsay"){ 	return	sl_func_jsay(concat_value);}
+		
+
+	
+		//kick yourself from the server
+		if(string_value=="gone" ){
+			pb_slot=int_value+1;
+			say(PlayerList[int_value]["name"]+" has ^4Go^1Ne"); 
+			set("pb_sv_kick "+pb_slot + " 0"); 
+		}
+
+		//Sound Slash Command(s)
+		if (string_value == "vsay"){
+			return voiceChats(int_value, concat_value);
+		}
+
+		
+		if(string_value=="say"){ 
+			return SayCommands(int_value, concat_value);
+		}
+		//say, say_team etc. commands
+		
+		//help functions
+		//dutch, we always return 1 in these helpfuncs, so no reason to pass it on to the subfunctions
+		if(string_value == "helpme"){	hlp_common(int_value);	return 1; }
+		if(string_value == "adminhelp"){	hlp_admin(int_value); 	return 1; }
+		if(string_value == "soundlist" ){	hlp_snd ( int_value); return 1;	}	
+
+		//other Commands?
+		
+	}
+	
+	return 0;
+
+};
+

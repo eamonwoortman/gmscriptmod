@@ -1,0 +1,182 @@
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+CommandList Table
+this is used, to store informations about all available Commands and the AdminLevel.
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global CommandList={
+{0,commands="vsay,chan,helpme,soundlist, ",},
+{1,commands="vsay,chan,helpme,soundlist,adminhelp,ignore, unignore, ignored, asay, admincheck, chatto, chat, re,beer,sex,banana,music,",},
+{2,commands="vsay,chan,helpme,soundlist,adminhelp,ignore, unignore, ignored, asay, admincheck, chatto, chat, re, whois,whoisadmin,chanlist,drop,kick,reason,noob,beer,sex,banana,music,spec,resetmatch,flash,",},
+{3,commands="vsay,chan,helpme,soundlist,adminhelp,ignore, unignore, ignored, asay, admincheck, chatto, chat, re, whois,whoisadmin,chanlist,channels,drop,kick,reason,tmpban,noob,flash,beer,sex,banana,music,spec,resetmatch,swapteams,hsay,csay,flash,",},
+{4,commands="vsay,chan,helpme,soundlist,adminhelp,ignore, unignore, ignored, asay, admincheck, chatto, chat, re, whois,whoisadmin,chanlist,channels,drop,kick,reason,tmpban,ban,noob,flash,beer,sex,banana,music,spec,resetmatch,swapteams,hsay,csay,map,jsay,flash,"},
+};
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+PlayerList Table
+this is used, to store informations about all players.
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global PlayerList={
+{0,id="0",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{1,id="1",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{2,id="2",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{3,id="3",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{4,id="4",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{5,id="5",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{6,id="6",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{7,id="7",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{8,id="8",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{9,id="9",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{10,id="10",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{11,id="11",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{12,id="12",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{13,id="13",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{14,id="14",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{15,id="15",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{16,id="16",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{17,id="17",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{18,id="18",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,},
+{19,id="19",admin_level=0,slaps_given=0,hide_say=0,replace_name="",cl_guid="",ip="",name="",password="",chat_to=-1,re_to=-1,chan="",score=0,kills=0,deaths=0,selfkills=0,nadekills=0,teamkills=0,team=-1,z_velo=0,ignored=0,playsound=0,voiceChatSquelch = 0,voiceChatPreviousTime=0,}
+};
+
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+WeaponList Table
+this is used, to store informations about all Weapons.
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global WeaponList={
+{0,mod="MOD_UNKNOWN",},
+{1,mod="MOD_MACHINEGUN",},
+{2,mod="MOD_BROWNING",},
+{3,mod="MOD_MG42",},
+{4,mod="MOD_GRENADE",},
+{5,mod="MOD_ROCKET",},
+{6,mod="MOD_KNIFE",},
+{7,mod="MOD_LUGER",},
+{8,mod="MOD_COLT",},
+{9,mod="MOD_MP40",},
+{10,mod="MOD_THOMPSON",},
+{11,mod="MOD_STEN",},
+{12,mod="MOD_GARAND",},
+{13,mod="MOD_SNOOPERSCOPE",},
+{14,mod="MOD_SILENCER",},
+{15,mod="MOD_FG42",},
+{16,mod="MOD_FG42SCOPE",},
+{17,mod="MOD_PANZERFAUST",},
+{18,mod="MOD_GRENADE_LAUNCHER",},
+{19,mod="MOD_FLAMETHROWER",},
+{20,mod="MOD_GRENADE_PINEAPPLE",},
+{21,mod="MOD_CROSS",},
+{22,mod="MOD_MAPMORTAR",},
+{23,mod="MOD_MAPMORTAR_SPLASH",},
+{24,mod="MOD_KICKED",},
+{25,mod="MOD_GRABBER",},
+{26,mod="MOD_DYNAMITE",},
+{27,mod="MOD_AIRSTRIKE",},
+{28,mod="MOD_SYRINGE",},
+{29,mod="MOD_AMMO",},
+{30,mod="MOD_ARTY",},
+{31,mod="MOD_WATER",},
+{32,mod="MOD_SLIME",},
+{33,mod="MOD_LAVA",},
+{34,mod="MOD_CRUSH",},
+{35,mod="MOD_TELEFRAG",},
+{36,mod="MOD_FALLING",},
+{37,mod="MOD_SUICIDE",},
+{38,mod="MOD_TARGET_LASER",},
+{39,mod="MOD_TRIGGER_HURT",},
+{40,mod="MOD_EXPLOSIVE",},
+{41,mod="MOD_CARBINE",},
+{42,mod="MOD_KAR98",},
+{43,mod="MOD_GPG40",},
+{44,mod="MOD_M7",},
+{45,mod="MOD_LANDMINE",},
+{46,mod="MOD_SATCHEL",},
+{47,mod="MOD_TRIPMINE",},
+{48,mod="MOD_SMOKEBOMB",},
+{49,mod="MOD_MOBILE_MG42",},
+{50,mod="MOD_SILENCED_COLT",},
+{51,mod="MOD_GARAND_SCOPE",},
+{52,mod="MOD_CRUSH_CONSTRUCTION",},
+{53,mod="MOD_CRUSH_CONSTRUCTIONDEATH",},
+{54,mod="MOD_CRUSH_CONSTRUCTIONDEATH_NOATTACKER",},
+{55,mod="MOD_K43",},
+{56,mod="MOD_K43_SCOPE",},
+{57,mod="MOD_MORTAR",},
+{58,mod="MOD_AKIMBO_COLT",},
+{59,mod="MOD_AKIMBO_LUGER",},
+{60,mod="MOD_AKIMBO_SILENCEDCOLT",},
+{61,mod="MOD_AKIMBO_SILENCEDLUGER",},
+{62,mod="MOD_SMOKEGRENADE",},
+{63,mod="MOD_SWAP_PLACES",},
+{64,mod="MOD_SWITCHTEAM",},
+{65,mod="MOD_SPAWNCAMP",},
+};
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+BanList:
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+global BanList=table(
+"[TN] Apolobitch",
+"Nigger",
+"Nazi",
+"Nigga",
+".",
+":",
+"Hitler"
+);
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+AdminList:
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+AdminList:
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+global AdminList={
+//Admins
+{name="Apologet",	cl_guid="B60D56C4ADD95E5417991CD6F900A899",admin_level=4,admin_pw="",},
+{name="Argl",    	cl_guid="900AA6EFC0CF3362D9DB6FDD24C7663E",admin_level=4,admin_pw="",},
+{name="test-dr",  cl_guid="C0DD826E29A0CF11B04E7B2603DB96A9",admin_level=4,admin_pw="",},
+{name="DutchMeat",  cl_guid="DDCC17B9E988DA991404292C11B5B5B5",admin_level=4,admin_pw="",},
+
+//Leaders
+{name="spliffy",cl_guid="B3E21BC618D13B5FA9F7AC4DB05204DB",admin_level=3,admin_pw="",},
+{name="bull",cl_guid="6DE5581DB210C20CC10BF5BD54FD20CD",admin_level=3,admin_pw="",},
+{name="TriffiD",cl_guid="DF8EEC3C520FD4B5B348D1D83936990C",admin_level=3,admin_pw="",},
+{name="deimos",cl_guid="94C310FDD2697F3270ED400914ABAB17",admin_level=3,admin_pw="",},
+
+//TN
+{name="Saubaer", cl_guid="5F473E1A327E9681F085FF055301A43D",admin_level=2,admin_pw="",},
+{name="Loki", cl_guid="51438A113C90225DCD5E4EFD7E3AAD8C",admin_level=2,admin_pw="",},
+{name="Jupidu",  cl_guid="6E558326EB84A04F15C61C476B99CE11",admin_level=2,admin_pw="",},
+{name="McTabs",  cl_guid="F7D13B7366853BCED73B155A918849E6",admin_level=2,admin_pw="",},
+{name="ErdingA", cl_guid="3975304D91853E1B9F7E4C49E47576AE",admin_level=2,admin_pw="",},
+{name="shifty", cl_guid="5E3568D54EBF2EF1033191EF9627856C",admin_level=2,admin_pw="",},
+{name="merlin1991", cl_guid="2C68EA7D7AB4AA4DF3D283AEBBCD5796",admin_level=2,admin_pw="",},
+{name="diesel", cl_guid="EF9ED6E930FE8BD4DC74B80D5F1BE5D7",admin_level=2,admin_pw="",},
+{name="apophis", cl_guid="E2C60DEBB454FA8F7E19C4DCB8F41872",admin_level=2,admin_pw="",},
+{name="apophis", cl_guid="AD72A23472607E4336C092AEF5153B51",admin_level=2,admin_pw="",},
+{name="stony", cl_guid="C0E6EE52A68E3F54D72D8C330A69B191",admin_level=2,admin_pw="",},
+{name="growkilla", cl_guid="63F5C3FED6F6E8518E2A761015432C57",admin_level=2,admin_pw="",},
+{name="muetze", cl_guid="764719268CA744199BA87C77B8187F60",admin_level=2,admin_pw="",},
+{name="rudi",    cl_guid="1056C6670F31276AEC3B2E8300B05DEF",admin_level=2,admin_pw="",},
+{name="blueberry",    cl_guid="AEA90EE062CC87989F3B59D8AB6457B9",admin_level=2,admin_pw="",},
+
+//gonzo
+{name="moses",    cl_guid="2876FDAC4F15AB4C6592A63280D4ECEA",admin_level=2,admin_pw="",},
+{name="bonzo",    cl_guid="ADDAB07E8F73C1C743DA1CB26E38E9F4",admin_level=2,admin_pw="",},
+{name="splinx",    cl_guid="22FE87D6A26D08905EF602BA3A246349",admin_level=2,admin_pw="",},
+{name="bionic",    cl_guid="286C8DA8B2BDDECE0D5E360F34F224B4",admin_level=2,admin_pw="",},
+{name="fishy",    cl_guid="03719487BA54115C3D4BC75462AF1950",admin_level=2,admin_pw="",},
+{name="KillerMaster",    cl_guid="224D6E98FECCADEB901629DE6EBB716E",admin_level=2,admin_pw="",},
+{name="ReggaeSoul",cl_guid="D96E7EE65DCCF4E6C9753967318CE68F",admin_level=2,admin_pw="",},
+{name="Korni",  	cl_guid="1BE680B161F10C7EF250FF52478439E9",admin_level=2,admin_pw="",},
+{name="HEINI",  	cl_guid="B97F6E67DAEFB587B7A495483F9DBB28",admin_level=2,admin_pw="",},
+{name="TrueKilla",cl_guid="466977781A5CFE69EBC475E711037FFF",admin_level=2,admin_pw="",},
+
+//Friend(s)
+{name="TheGamer",  cl_guid="97019ED126EB59A9C15C2937DC6F9AD3",admin_level=1,admin_pw="",},
+};
+
+

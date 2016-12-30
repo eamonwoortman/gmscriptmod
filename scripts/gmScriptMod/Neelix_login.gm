@@ -1,0 +1,75 @@
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////
+Login function
+by: Eamon
+example: /login PASS
+
+usage,
+you can set 5 admin passwords, all have different admin levels. Put this in your server config:
+
+//a1 = admin level 1, a2 = admin level 2, etc
+seta a1_pass "admin1"
+seta a2_pass "admin2"
+seta a3_pass "admin3"
+seta a4_pass "admin4"
+seta a5_pass "admin5"
+
+if all a*_pass cvars are not set, then it will display 'Sorry, admin status is disabled on this server'.
+if for example a2_pass isn't set but the rest is, then it will just check your password with the next a*_pass
+
+
+*////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Dutchmeat Login Function for /login
+global PlayerLogin = function(clientNum,Password)
+{
+	empty = 0;
+
+	if(PlayerList[clientNum]["admin_level"]){
+		cprint(clientNum, "You are already an admin");
+		return;
+	}
+
+	for (i = 0; i < 5; i = i + 1){
+				
+		level = i + 1;
+
+		cvarPassword = getStringCvar("a"+level+"_pass");
+
+		if (!strlen(cvarPassword)){
+			empty = empty + 1;
+			continue;
+		}
+
+		if (cvarPassword == Password){
+			say("console: Player '"+PlayerList[clientNum]["name"]+"' is now logged in as a level "+level+" admin!");
+			cprint(clientNum, "You are now logged in as a level "+level+" admin!");
+			cp(clientNum, "You are now logged in as a level "+level+" admin!");
+
+			PlayerList[clientNum]["admin_level"] = level;
+			return;
+		}
+	}
+
+	if (empty == 5){
+		cprint(clientNum, "Sorry, admin status is disabled on this server");
+	}else{
+		cprint(clientNum, "Invalid admin password!");
+	}
+
+};
+
+//Apo Login function for "/gmsm PASSWD"
+//int_value, concat_value
+global gmSMLogin = function(clientNum,Password){
+		if (PlayerList[clientNum]["admin_level"]){
+			cprint(clientNum, "You are already an admin");
+			return 1;
+		}
+		if(Password==friendpw ){PlayerList[clientNum]["admin_level"]=1;}
+		if(Password==clanpw){PlayerList[clientNum]["admin_level"]=2;}
+		if(Password==leaderpw){PlayerList[clientNum]["admin_level"]=3;}
+		if(Password==adminpw){PlayerList[clientNum]["admin_level"]=4;}
+	
+		//always return when using the login command
+		//return 1 means, that the player doesnt receive a "unknown command" error msg in his console
+		return 1;
+};

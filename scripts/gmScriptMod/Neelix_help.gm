@@ -1,0 +1,60 @@
+//A Common Functions Help example
+global hlp_common = function ( clientNum ){
+		cprint(clientNum ,"^3Common Functions:"); 
+		cprint(clientNum ,"^3/adminhelp       - ..."); 
+		cprint(clientNum ,"^3/soundlist       - ..."); 
+		cprint(clientNum ,"^3/chatto name     - Defines the Client by part of a Name you wanna talk to"); 
+		cprint(clientNum ,"^3/chat MSG        - Sends the Message to the Defined client"); 
+		cprint(clientNum ,"^3/re MSG          - Sends a Message Back. Works only 1 round!"); 
+		cprint(clientNum ,"^3/password name   - Defines the Channel, you wanna talk on"); 
+		cprint(clientNum ,"^3/chan            - Send a Chat Msg to the defined Channel"); 
+		cprint(clientNum ,"^3/chanlist        - Lists all people, who are talking on your channel"); 
+		cprint(clientNum ,"^3/soundlist       - Shows a List of available commads"); 
+		cprint(clientNum ,"^3/sex             - ..."); 
+		cprint(clientNum ,"^3/beer            - ..."); 
+		cprint(clientNum ,"^3/waitress        - ..."); 
+		cprint(clientNum ,""); 
+};
+
+//A Soundlist help example
+global hlp_snd = function ( clientNum ){
+		cprint(clientNum ,"^2g^3m^2S^3c^2r^3i^2p^3t^2M^3o^2d ^1Soundlist"); 
+		cprint(clientNum ,""); 
+		cprint(clientNum ,"^3Admin/Friend Sounds:"); 
+		cprint(clientNum ,"^3!banana         - Banana Phone Song"); 
+		cprint(clientNum ,"^3!butcher        - Fresh Meat!"); 
+		cprint(clientNum ,"^3!high           - High"); 
+		cprint(clientNum ,"^3!lhigh          - Little High"); 
+		cprint(clientNum ,"^3!english        - Who needs English?"); 
+		cprint(clientNum ,"^3!sorry          - Sorry!"); 
+		cprint(clientNum ,"^3!disarm         - Disarm the Dynamite!"); 
+		cprint(clientNum ,""); 
+		cprint(clientNum ,"^3Public Sounds:"); 
+		cprint(clientNum ,"^3/beer          - mmmh Beer"); 
+		cprint(clientNum ,"^3/banana        - Banana Phone Song"); 
+};
+
+//A Admin Command Help example
+global hlp_admin = function ( clientNum ){
+		cprint(clientNum ,"^2g^3m^2S^3c^2r^3i^2p^3t^2M^3o^2d ^1Help"); 
+		cprint(clientNum ,""); 
+		cprint(clientNum ,"^3Admin Functions:"); 
+		cprint(clientNum ,"^3/gmsm PASS       - A Login at gmScriptMod"); 
+		cprint(clientNum ,"^3/login PASS      - Another Login at gmScriptMod"); 
+		cprint(clientNum ,"^3/reason REASON   - Defines a Reason for kick/tmpban/ban"); 
+		cprint(clientNum ,"^3/kick SLOT       - 5 Min Kick. Use /players to See the ClientSlot"); 
+		cprint(clientNum ,"^3/drop PBSLOT     - 0 Min Kick. Use /pbpower to See the PBSlot"); 
+		cprint(clientNum ,"^3/tempban PBSLOT  - 60 Min Kick. Use /pbpower to See the PBSlot"); 
+		cprint(clientNum ,"^3/ban PBSLOT      - Use /pbpower to See the PBSlot"); 
+		cprint(clientNum ,"^3/hsay MSG        - Hide your Warn Message"); 
+		cprint(clientNum ,"^3/csay MSG        - console: Messages"); 
+		cprint(clientNum ,"^3/cprint MSG      - Prints a MSG"); 
+		cprint(clientNum ,"^3/cpm MSG         - Prints a MSG"); 
+		cprint(clientNum ,"^3/cps MSG         - Prints a MSG"); 
+		cprint(clientNum ,"^3/spec SLOT       - Puts a Player to Spectator"); 
+		cprint(clientNum ,"^3/map MAPNAME     - Loads a Map"); 
+		cprint(clientNum ,"^3/resetmatch      - Restarts the Map"); 
+		cprint(clientNum ,"^3/swapteams       - Team Swap"); 
+		cprint(clientNum ,"^3/logout          - Logout from gmScriptMod"); 
+		cprint(clientNum ,""); 
+};

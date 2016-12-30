@@ -1,0 +1,182 @@
+
+global Playsounds = function (int_value, concat_value){
+
+
+//	if (PlayerList[int_value]["playsound"] == 3){
+//		say("^1Spam protection^7, only 3 playsounds per member");
+//		return 1;
+//	}
+
+
+	if (concat_value == "!banana"){
+		playsound(-1,"sound\\GoNe\\bananaphone.wav");
+
+	}else if(concat_value == "!smoking"){
+		playsound(-1,"sound\\GoNe\\smokin.wav");
+
+	}else if(concat_value == "!stopme"){
+
+		playsound(-1,"sound\\GoNe\\stopme.wav");
+
+	}else if(concat_value == "!english"){
+		playsound(-1,"sound\\GoNe\\simpsonenglish.wav");
+
+	}else if(concat_value == "!doh"){
+		playsound(-1,"sound\\GoNe\\simp32dohs.wav");
+
+	}else if(concat_value == "!beer"){
+		playsound(-1,"sound\\GoNe\\simpbeer.wav");
+
+	}else if(concat_value == "!grusel"){
+		playsound(-1,"sound\\obj_villa2\\grusel.wav");
+
+	}else if(concat_value == "!butcher"){
+		playsound(-1,"sound\\merlin1991\\obj_desert\\butcher.wav");
+
+	}else if(concat_value == "!medic"){
+		playsound(-1,"sound\\chat\\allies\\medic.wav");
+
+	}else if(concat_value == "!gg"){
+		playsound(-1,"sound\\chat\\allies\\586c.wav");
+
+	}else if(concat_value == "!sorry"){
+		playsound(-1,"sound\\chat\\allies\\45c.wav");
+
+	}else if(concat_value == "!disarm"){
+		playsound(-1,"sound\\chat\\allies\\36a.wav");
+
+	}else if(concat_value == "!hi"){
+		playsound(-1,"sound\\chat\\allies\\54a.wav");
+
+	}else if(concat_value == "!music"){
+		playsound(-1,"sound\\music\\loopMenu045tuned.wav");
+
+	}else if(concat_value == "!villa"){
+		playsound(-1,"sound\\obj_villa2\\tomcraft.wav");
+		
+	}else if(concat_value == "!cheer"){
+		playsound(-1,"sound\\GoNe\\simpwoohoo.wav");
+
+	}else if(concat_value == "!high"){
+		playsound(-1,"sound\\GoNe\\wannagethigh.wav");
+
+	}else if(concat_value == "!lhigh"){
+		playsound(-1,"sound\\GoNe\\alittlehigh.wav");
+	}else if(concat_value == "!dr"){
+		playsound(-1,"drgreenthumb.wav");
+	}else if(concat_value == "!mj"){
+		playsound(-1,"iloveyoumaryjane.wav");
+	}else if(concat_value == "!hits"){
+		playsound(-1,"hitsfromthebong.wav");
+	}else if(concat_value == "!cb"){
+		playsound(-1,"cbintro.wav");
+	}else if(concat_value == "!killu"){
+		playsound(-1,"I Kill you2.wav" );
+	}else if(concat_value == "!learn"){
+		playsound(-1,"learn.wav");
+	}else if(concat_value == "!test3"){
+			playsound(-1,"killingspree.wav");
+
+	}else if(concat_value == "!wicked"){
+		playsound(-1,"wickedsick.wav");
+	}else if(concat_value == "!gay"){
+		playsound(-1,"iamgay.wav");
+	}else if(concat_value == "!bb"){
+	        playsound(-1,"sound\\GoNe\\wiedersehen.wav");
+	}else if(concat_value == "!gb"){
+	        playsound(-1,"sound\\GoNe\\gehbitte.wav");	
+	}else if(concat_value == "!gold"){
+	        playsound(-1,"sound\\GoNe\\gold.wav");
+	}else if(concat_value == "!is"){
+	        // say("^2Loaded but not supported :(");
+	        playsound(-1,"sound\\GoNe\\isags.wav");
+	}else if(concat_value == "!jaja"){
+	        playsound(-1,"sound\\GoNe\\jaja.wav");
+	}else if(concat_value == "!depp"){
+	        playsound(-1,"sound\\GoNe\\rausch.wav");
+	}else if(concat_value == "!russen"){
+	        playsound(-1,"sound\\GoNe\\russen.wav");
+	}else if(concat_value == "!cc"){
+	        playsound(-1,"sound\\GoNe\\scrotum.wav");
+	}else if(concat_value == "!hi"){
+	        playsound(-1,"sound\\GoNe\\servas.wav");
+	}else if(concat_value == "!wtf"){
+	        playsound(-1,"sound\\GoNe\\wosis.wav");
+//	}else if(concat_value == "!"){
+//	        playsound(-1,"sound\\.wav");
+//	}else if(concat_value == "!"){
+//	        playsound(-1,"sound\\.wav"};
+	
+	}else{
+		return 0;
+	}
+
+	PlayerList[int_value]["playsound"] = PlayerList[int_value]["playsound"] + 1;
+
+	return 1;
+
+};
+
+global voiceChats = function(clientNum, concat){
+
+
+	PlayerList[clientNum]["voiceChatSquelch"] = PlayerList[clientNum]["voiceChatSquelch"] - (level.time - PlayerList[clientNum]["voiceChatPreviousTime"]);
+
+
+	PlayerList[clientNum]["voiceChatPreviousTime"] = level.time;
+
+	if ( PlayerList[clientNum]["voiceChatSquelch"] < 0 ){
+		PlayerList[clientNum]["voiceChatSquelch"] = 0;
+	}
+
+	if ( PlayerList[clientNum]["voiceChatSquelch"] >= 30000 ) {
+		cprint (clientNum, "^1Spam Protection^7: VoiceChat ignored");
+		return 1;
+	}
+
+	PlayerList[clientNum]["voiceChatSquelch"] += (34000 / VOICECHATSALLOWED);
+
+
+	if (concat == "GoNe_Hi" || concat == "hi"){
+		playsound(-1, "sound/chat/specops/54a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Hi!");
+	}else if (concat == "GoNe_Bye" || concat == "bye"){
+		playsound(-1, "sound/chat/specops/55a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Bye!");
+	}else if (concat == "GoNe_Cheer" || concat == "cheer"){
+		playsound(-1, "sound/chat/specops/57d.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Yehaa!");
+	}else if (concat == "GoNe_GreatShot" || concat == "greatshot"){
+		playsound(-1, "sound/chat/specops/56a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Great Shot!");
+	}else if (concat == "GoNe_Thanks" || concat == "thanks"){
+		playsound(-1, "sound/chat/specops/43d.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Thanks!");
+	}else if (concat == "GoNe_Welcome" || concat == "welcome"){
+		playsound(-1, "sound/chat/specops/44a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Your Welcome!");
+	}else if (concat == "GoNe_Oops" || concat == "oops"){
+		playsound(-1, "sound/chat/specops/46b.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Oops!");
+	}else if (concat == "GoNe_Sorry" || concat == "sorry"){
+		playsound(-1, "sound/chat/specops/45b.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Sorry!");
+	}else if (concat == "GoNe_HoldFire" || concat == "holdfire"){
+		playsound(-1, "sound/chat/specops/26b.wav");	
+		say (PlayerList[clientNum]["name"]+"^7: ^3Hold Your Fire!");	
+	}else if (concat == "GoNe_GoodGame" || concat == "goodgame"){
+		playsound(-1, "sound/chat/specops/586a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Good Game!");
+	}else if (concat == "GoNe_Yes" || concat == "yes"){
+		playsound(-1, "sound/chat/specops/41a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3Yes!");
+	}else if (concat == "GoNe_No" || concat == "no"){
+		playsound(-1, "sound/chat/specops/42a.wav");
+		say (PlayerList[clientNum]["name"]+"^7: ^3No!");
+	}else{
+		return 0;
+	}
+
+	return 1;
+
+};

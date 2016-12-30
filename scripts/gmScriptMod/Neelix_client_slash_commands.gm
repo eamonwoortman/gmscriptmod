@@ -1,0 +1,399 @@
+global kickReason = "";
+
+//Function to ignore a Player
+global sl_func_ignore = function ( clientNum,warnedPlayer){
+
+		name_to_warn="";
+		name_to_warn=warnedPlayer;
+			
+		if(name_to_warn!="" && strlen(name_to_warn)>2){
+			foreach(keys and values in PlayerList){
+				if(search(name_to_warn,strip(values["name"]))==1){
+					values["ignored"] = 1;
+					say("^1Attention^3!^7 "+values["name"] +"^3 has been ignored by ^7"+PlayerList[clientNum]["name"]);
+				}
+			}
+		}
+		return 1;
+
+};
+
+//Slash function for unignoring a player
+global sl_func_unignore = function ( clientNum, warnedPlayer){
+
+		name_to_warn="";
+		name_to_warn=warnedPlayer;
+			
+		if(name_to_warn!="" && strlen(name_to_warn)>2){
+			foreach(keys and values in PlayerList){
+				if(search(name_to_warn,strip(values["name"]))==1){
+					values["ignored"] = 0;
+					say("^1WARNING^3!^7 "+values["name"] +"^3 has been unignored by ^7"+PlayerList[clientNum]["name"]);
+				}
+			}
+		}
+		return 1;
+};
+
+//Who is ignored?
+global sl_func_ignored = function ( clientNum ){
+	foreach(keys and values in PlayerList){
+		if (values["ignored"] == 1){
+			cprint(clientNum , values["name"] +"^3 has been ignored");
+		}
+	}
+	return 1;
+};
+
+//chat system for admins only asay = admin say
+//will send text to all logged in admins
+global sl_func_admin_say = function( clientNum,text){
+
+	foreach( keyVar and valVar in PlayerList)
+	{
+		if(valVar["admin_level"]>=2){
+			cprint(valVar[0],"^1AdminChat!");
+			cp(valVar[0],PlayerList[int_value]["name"]+"^7: ^8"+concat_value);
+		}
+	}
+ 	return 1;
+};
+
+
+
+//What adminlevel do i have?
+global sl_func_admincheck = function ( clientNum ) {
+
+	if (PlayerList[clientNum]["admin_level"]){
+		cprint(clientNum, "You are adminlevel "+PlayerList[clientNum]["admin_level"]);
+		return 1;	
+	}else{
+		cprint(clientNum, "You are not an admin");
+	}
+	return 1;
+};
+
+
+global sl_func_chatto = function ( clientNum, player ){
+	//Kai, define the person, you wanna talk to
+	foreach(keys and values in PlayerList){
+		if(search(player,strip(values["name"]))==1){
+			PlayerList[clientNum]["chat_to"]=values[0];
+		}
+	}
+	return 1;
+};
+
+//private chat function
+global sl_func_chat = function ( clientNum, text){
+	//Kai, send a chat msg
+	PlayerList[ PlayerList[clientNum]["chat_to"] ]["re_to"]=clientNum;
+	cpm(PlayerList[clientNum]["chat_to"],PlayerList[clientNum]["name"]+":^6 "+ text);	
+	cpm(clientNum,PlayerList[clientNum]["name"]+":^6 "+ text);	
+	cp(PlayerList[clientNum]["chat_to"],PlayerList[clientNum]["name"]+":^6 "+ text);	
+	cp(clientNum,PlayerList[clientNum]["name"]+":^6 "+ text);	
+	return 1;
+};
+
+// "/re TXT" if some1 has started a private chat.
+//!! ATtention! this re is only for one round and only to the latest player who priv. chatted to you.
+global sl_func_re = function (clientNum, text){
+	cpm(PlayerList[clientNum]["re_to"],PlayerList[clientNum]["name"]+":^6 "+ text);	
+	cpm(int_value,PlayerList[int_value]["name"]+":^6 "+ text);	
+	return 1;
+};
+
+
+global sl_func_whois = function (clientNum){
+	foreach( keyVar and valVar in PlayerList)
+	{
+		if(valVar["cl_guid"]!=""){
+		cpm(clientNum,valVar["name"]+" ^7IP:^3 " +valVar["ip"]+ "^7 Admin:^1 "+valVar["admin_level"] + " ^7cl_guid: ^5"+valVar["cl_guid"] );
+		}
+	}
+	return 1;
+};
+
+global sl_func_whoisadmin = function (clientNum){
+
+	//Who is Admin at the Server?
+	foreach(keyVar and valVar in PlayerList){
+	
+		if(valVar["admin_level"]){
+     			cpm(clientNum,valVar["name"]+"^7 Admin: ^1"+valVar["admin_level"] );
+           	}
+	}
+	return 1;
+};
+
+global sl_func_chan = function (clientNum, text){
+	//Kai, talk to a channel
+	foreach(keys and values in PlayerList){
+		if(values["chan"]==PlayerList[clientNum]["chan"]){
+		  cpm(i,PlayerList[clientNum]["name"]+"^3@^5Channel("+PlayerList[clientNum]["chan"]+"): "+text);
+		  cp(i,PlayerList[clientNum]["name"]+"^3@^5Channel("+PlayerList[clientNum]["chan"]+"): "+text);
+		  cprint(i,PlayerList[clientNum]["name"]+"^3@^5Channel("+PlayerList[clientNum]["chan"]+"): "+text);
+		}
+	}
+	return 1;
+};
+
+//show open channels
+global sl_func_channels = function (clientNum){
+	//What Channels are created?
+	cprint(clientNum,"^3Open Channels on the Server:");
+	foreach(keys and values in PlayerList){
+		if(values["chan"]!=""){
+			cpm(clientNum,values["name"]+ " ^3is talking on Channel ^7:^5"+values["chan"]);
+		}
+	}
+	return 1;
+};
+
+//who is on your channel?
+global sl_func_chanlist = function (clientNum){
+	cprint(clientNum,"^3People talking on Channel ^5"+PlayerList[clientNum]["chan"]+"^7:");
+	foreach(keys and values in PlayerList){
+		if(values ["chan"]==PlayerList[clientNum]["chan"]){
+			cprint(clientNum,values["name"]);	
+		}
+	}
+	return 1;
+};
+
+global sl_func_reason = function (int_value, concat_value){ 
+
+	if (concat_value){
+		global kickReason=concat_value;
+	}else{
+		cprint(int_value, "usage: reason <reason>");
+	}
+	
+	return 1;
+};
+
+global sl_func_ban = function (concat_value){ 
+		
+	if(kickReason!=""){
+		say("^1Client ^3"+concat_value+" ^1 has received a Ban. Reason^7: ^3" + kickReason);
+	}else{
+		say("^1Client ^3"+concat_value+" ^1 has received a Ban.");
+	}
+	
+	set("pb_sv_ban "+concat_value); 
+
+	return 1;
+};
+
+global sl_func_tmpban = function (concat_value){ 
+
+	if(kickReason!=""){
+		say("^1Client ^3"+concat_value +" ^1received a TempBan. Reason^7: ^3" + kickReason);
+	}else{
+		say("^1Client ^3"+concat_value +" ^1received a TempBan.");
+	}
+	
+	set("pb_sv_kick "+concat_value + " 60"); 
+
+	return 1;
+};
+		
+		
+global sl_func_kick = function (concat_value){ 
+	
+	if(kickReason!=""){
+		say("^1Kick Player Slot:^3 "+ concat_value + "^1 Reason^7: ^3"+kickReason);
+	}else{
+		say("^1Kick Player Slot:^3 "+ concat_value);	
+	}
+	
+	set("clientkick "+concat_value); 
+	
+	return 1;
+};
+
+global sl_func_drop = function (concat_value){ 
+		
+	if(kickReason!=""){
+		say("Client  "+int_value + " kicked Client " + concat_value + " for 0 Minutes. Reason: "+kickReason);
+		set("pb_sv_kick "+concat_value + " 0 "+kickReason);
+	}else{
+		say("You have to set a /reason for /drop command");
+	}
+		
+	return 1;
+};
+
+global sl_func_noob = function (int_value, concat_value){ 
+
+	if (strlen(concat_value)){
+		cnum = atoi(concat_value);
+		
+		if (strlen(PlayerList[cnum]["name"])){
+			PlayerList[cnum]["replace_name"]="I am a Noob";
+			cprint(int_value, "player '"+PlayerList[cnum]["name"]+"^7' now has a 'noob' replacename");
+		}else{
+			cprint(int_value,"player '"+cnum+"' not found!");
+		}
+		
+	}else{
+		cprint(int_value, "Usage: /noob <clientNumber>");
+	}
+	return 1;
+};
+/*
+		//Kai, make a client to a noob.
+		//all say msgs will later be replaced with "I am a Noob"
+		if(string_value=="noob" && PlayerList[int_value]["admin_level"]>=2 ){
+			//The following Line is NOT working, because concat_value is interpreted as a string and not as an integer :(
+			//PlayerList[concat_value]["replace_name"]="I am a Noob";
+			for(i=0;i<MAX_PLAYERS;i=i+1){
+				if(PlayerList[i]["id"]==concat_value){
+					PlayerList[i]["replace_name"]="I am a Noob";
+				}
+			}
+			
+			return 1;
+		}
+*/
+
+
+
+global sl_func_cprint = function (concat_value){ //3
+
+	cprint(-1, concat_value);
+	return 1;
+	
+};
+
+global sl_func_cpm = function (concat_value){
+	
+	cpm(-1, concat_value);
+	return 1;
+		
+};
+
+global sl_func_cps = function (concat_value){
+	
+	cp(-1,concat_value);
+	return 1;
+	
+};
+
+global sl_func_cps = function (concat_value){
+
+	cp(-1,concat_value);
+	cpm(-1, concat_value);
+	cprint(-1, concat_value);
+	return 1;
+
+};
+
+global sl_func_music = function (int_value){
+	say(PlayerList[int_value]["name"]+ "^7 loves Music!");
+	playsound(int_value,"sound\\music\\loopIntrotuned.wav");
+	return 1;
+};
+
+global sl_func_banana = function (int_value){
+	say(PlayerList[int_value]["name"]+ "^7 loves the Banana Phone Song!");
+	playsound(int_value,"sound\\GoNe\\bananaphone.wav");
+	return 1;	
+};
+
+global sl_func_sex = function (int_value){
+	say("A sexy young swedish bitch drops her panties and sits on "+PlayerList[int_value]["name"]+"'s face");
+	return 1;
+};
+
+global sl_func_beer = function (int_value){
+	say("A sexy waitress brings "+PlayerList[int_value]["name"]+" ^7a cool Beer!");
+	playsound(int_value,"sound\\GoNe\\simpbeer.wav");
+	return 1; 
+};
+
+global sl_func_waitress = function (int_value){
+	say(PlayerList[int_value]["name"]+"^7: forget the beer! I take the waitress!");
+	return 1;
+};
+
+global sl_func_flash = function (int_value,concat_value){
+	cnum = -1;
+
+	if (!strlen(concat_value)){
+		cprint(int_value, "Usage, /flash <clientNumber>");
+		return 1;
+	}
+
+	cnum = atoi(concat_value);
+
+	if (PlayerList[cnum]["name"]){
+		playsound(cnum,"sound\\misc\\deafbeep.wav");
+		return 1;
+	}else{
+		cprint(int_value,"couldn't find "+cnum);
+	}
+
+	return 1;
+};
+
+global sl_func_spec = function (int_value, concat_value){
+	
+	cnum = atoi(concat_value);
+	
+	if (PlayerList[cnum]["name"]){
+		set("forceteam "+concat_value + " s");
+		say ("Player '"+PlayerList[cnum]["name"]+"^7 was forced to spectators by ^7"+PlayerList[int_value]["name"]);	
+	}
+	
+	return 1;
+	
+};
+
+global sl_func_resetmatch = function (int_value){
+	
+	set("reset_match");
+	say ("The match was resetted by '"+PlayerList[int_value]["name"]+"^7'");
+	return 1;
+	
+};
+
+global sl_func_swapteams = function (int_value){
+	
+	set("swap_teams");
+	say ("The teams were swapped by '"+PlayerList[int_value]["name"]+"^7'");
+	
+	return 1;
+	
+};
+
+global sl_func_hsay = function (concat_value){
+	
+	say("^2*^1WARNING^2*^7 ^3"+concat_value);
+	return 1;
+	
+};
+
+global sl_func_csay = function (concat_value){
+	
+	say("console: "+concat_value);
+	return 1;
+	
+};
+
+global sl_func_map = function (concat_value){
+	
+	set("map "+concat_value);
+	return 1;
+	
+};
+
+global sl_func_jsay = function (concat_value){
+	
+	say(concat_value);
+	return 1;
+	
+};
+
+
+
